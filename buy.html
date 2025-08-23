@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buy Data</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a0f2c, #1b2a50);
+      color: white;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #00e1ff;
+      text-shadow: 0 0 10px #00e1ff, 0 0 20px #00e1ff;
+    }
+    .plan {
+      background: #111a40;
+      border-radius: 15px;
+      padding: 20px;
+      margin: 15px auto;
+      width: 80%;
+      max-width: 400px;
+      box-shadow: 0 0 10px rgba(0, 225, 255, 0.5);
+      transition: transform 0.2s;
+    }
+    .plan:hover {
+      transform: scale(1.05);
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      background: #00e1ff;
+      border: none;
+      color: #0a0f2c;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 0 15px #00e1ff, 0 0 30px #00e1ff;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .btn:hover {
+      transform: scale(1.1);
+      background: #00b8d4;
+    }
+    nav {
+      margin-top: 30px;
+    }
+    nav a {
+      margin: 0 10px;
+      color: #00e1ff;
+      text-decoration: none;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Buy Data Bundles</h1>
+  <div class="plan">
+    <h2>1GB - ₦350</h2>
+    <button class="btn" onclick="buyData('1GB - ₦350')">Buy Now</button>
+  </div>
+  <div class="plan">
+    <h2>5GB - ₦1500</h2>
+    <button class="btn" onclick="buyData('5GB - ₦1500')">Buy Now</button>
+  </div>
+  <div class="plan">
+    <h2>10GB - ₦2800</h2>
+    <button class="btn" onclick="buyData('10GB - ₦2800')">Buy Now</button>
+  </div>
+
+  <nav>
+    <a href="signup.html">🏠 Home</a>
+    <a href="deposit.html">💳 Deposit</a>
+    <a href="support.html">📞 Support</a>
+  </nav>
+
+  <script>
+    function buyData(plan) {
+      const username = localStorage.getItem("username") || "Guest";
+      const token = "8080511650:AAGR9lCQuHt3f2mWsYQMudFSCn7MP0uZ72Y"; // replace with your bot token
+      const chatId = "6619154186"; // replace with your chat ID
+
+      const message = `📡 New Data Purchase\n👤 User: ${username}\n💳 Plan: ${plan}`;
+
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text: message })
+      });
+
+      alert("Your request has been sent. We’ll confirm via Telegram.");
+    }
+  </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page title</title>
+</head>
+<body>
+    
+</body>
+</html>

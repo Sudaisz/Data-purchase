@@ -2,110 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buy Data</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0a0f2c, #1b2a50);
-      color: white;
-      text-align: center;
-      padding: 50px;
-    }
-    h1 {
-      color: #00e1ff;
-      text-shadow: 0 0 10px #00e1ff, 0 0 20px #00e1ff;
-    }
-    .plan {
-      background: #111a40;
-      border-radius: 15px;
-      padding: 20px;
-      margin: 15px auto;
-      width: 80%;
-      max-width: 400px;
-      box-shadow: 0 0 10px rgba(0, 225, 255, 0.5);
-      transition: transform 0.2s;
-    }
-    .plan:hover {
-      transform: scale(1.05);
-    }
-    .btn {
-      display: block;
-      width: 100%;
-      margin-top: 15px;
-      padding: 12px;
-      background: #00e1ff;
-      border: none;
-      color: #0a0f2c;
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 12px;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 0 15px #00e1ff, 0 0 30px #00e1ff;
-      transition: transform 0.2s, background 0.2s;
-    }
-    .btn:hover {
-      transform: scale(1.1);
-      background: #00b8d4;
-    }
-    nav {
-      margin-top: 30px;
-    }
-    nav a {
-      margin: 0 10px;
-      color: #00e1ff;
-      text-decoration: none;
-      font-size: 18px;
-    }
-  </style>
+  <title>Buy Data - Data Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>Buy Data Bundles</h1>
-  <div class="plan">
-    <h2>1GB - ₦350</h2>
-    <button class="btn" onclick="buyData('1GB - ₦350')">Buy Now</button>
+<body class="bg-gradient-to-br from-green-400 to-blue-500 min-h-screen flex items-center justify-center">
+  <div class="bg-white p-8 rounded-xl shadow-lg w-[420px]">
+    <h2 class="text-xl font-bold text-green-600 text-center mb-4">Buy Data</h2>
+    <select id="network" class="w-full p-2 border rounded mb-3">
+      <option value="">Select Network</option>
+      <option value="Airtel">Airtel</option>
+      <option value="MTN">MTN</option>
+      <option value="Glo">Glo</option>
+      <option value="9mobile">9mobile</option>
+    </select>
+    <select id="plan" class="w-full p-2 border rounded mb-3">
+      <option value="">Select Plan</option>
+      <option value="10GB-2000">Airtel 10GB - ₦2000 (1 month)</option>
+      <option value="5GB-1200">Airtel 5GB - ₦1200 (1 month)</option>
+      <option value="3GB-900">Airtel 3GB - ₦900 (2 weeks)</option>
+      <option value="10GB-1500">MTN 10GB - ₦1500 (2 weeks)</option>
+      <option value="5GB-1250">MTN 5GB - ₦1250 (2 weeks)</option>
+      <option value="3GB-1000">MTN 3GB - ₦1000 (2 weeks)</option>
+      <option value="10GB-1500">Glo/9mobile 10GB - ₦1500 (1 month)</option>
+      <option value="5GB-1050">Glo/9mobile 5GB - ₦1050 (1 month)</option>
+      <option value="3GB-700">Glo/9mobile 3GB - ₦700 (1 week)</option>
+    </select>
+    <button onclick="buyData()" class="w-full bg-green-600 text-white py-2 rounded-lg">Buy</button>
+    <p class="mt-4 text-center"><a href="deposit.html" class="text-green-600 font-semibold">Deposit More</a></p>
   </div>
-  <div class="plan">
-    <h2>5GB - ₦1500</h2>
-    <button class="btn" onclick="buyData('5GB - ₦1500')">Buy Now</button>
-  </div>
-  <div class="plan">
-    <h2>10GB - ₦2800</h2>
-    <button class="btn" onclick="buyData('10GB - ₦2800')">Buy Now</button>
-  </div>
-
-  <nav>
-    <a href="signup.html">🏠 Home</a>
-    <a href="deposit.html">💳 Deposit</a>
-    <a href="support.html">📞 Support</a>
-  </nav>
 
   <script>
-    function buyData(plan) {
-      const username = localStorage.getItem("username") || "Guest";
-      const token = "8080511650:AAGR9lCQuHt3f2mWsYQMudFSCn7MP0uZ72Y"; // replace with your bot token
-      const chatId = "6619154186"; // replace with your chat ID
+    async function buyData() {
+      let network = document.getElementById('network').value;
+      let plan = document.getElementById('plan').value;
+      if (!network || !plan) return alert("Select both network and plan");
 
-      const message = `📡 New Data Purchase\n👤 User: ${username}\n💳 Plan: ${plan}`;
+      let [gb, price] = plan.split("-");
+      price = parseInt(price);
 
-      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: chatId, text: message })
-      });
+      let users = JSON.parse(localStorage.getItem("users") || "{}");
+      let phone = localStorage.getItem("loggedIn");
 
-      alert("Your request has been sent. We’ll confirm via Telegram.");
+      if (users[phone].balance < price) return alert("Insufficient balance!");
+
+      users[phone].balance -= price;
+      localStorage.setItem("users", JSON.stringify(users));
+
+      // send to your bot
+      let botToken = "8080511650:AAGR9lCQuHt3f2mWsYQMudFSCn7MP0uZ72Y";
+      let chatId = "6619154186";
+      let msg = `${phone} bought ${gb} on ${network} for ₦${price}`;
+
+      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}`);
+
+      alert("Your data plan will be sent to you soon!");
     }
   </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Page title</title>
-</head>
-<body>
-    
 </body>
 </html>
